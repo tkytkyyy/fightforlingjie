@@ -639,6 +639,7 @@
     nextRound();
   }
   function nextRound(){
+    show('s-bracket');   // 关键：每轮都要把画面切回赛程页，否则点「继续」会停在结果页
     matches=[];
     for(var i=0;i<field.length;i+=2) matches.push([field[i],field[i+1]]);
     myMatch=-1;
