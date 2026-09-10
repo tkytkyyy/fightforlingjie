@@ -1,4 +1,4 @@
-# 为灵姐而战 🥊
+# 百炼英雄 · 灵姐争夺战 🥊
 
 **在线玩：** https://tkytkyyy.github.io/fightforlingjie/
 
