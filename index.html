@@ -132,6 +132,102 @@
   .lg .y{color:#ffd166}
   @keyframes lgin{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 
+  /* ---------- 战斗场景 ---------- */
+  .arena{flex:1 1 auto;min-height:212px;position:relative;overflow:hidden;border-radius:18px;margin:2px 0 6px;
+    background:linear-gradient(180deg,#241533 0%,#3a2049 52%,#4b2a3c 100%)}
+  .sky{position:absolute;inset:0;background:
+    radial-gradient(60% 40% at 50% 6%,rgba(255,214,150,.22),transparent 70%),
+    radial-gradient(90% 60% at 50% 110%,rgba(0,0,0,.55),transparent 60%)}
+  .crowd{position:absolute;left:0;right:0;bottom:30%;height:16px;opacity:.5;
+    background-image:radial-gradient(circle,rgba(0,0,0,.85) 46%,transparent 47%);background-size:15px 15px}
+  .floor{position:absolute;left:0;right:0;bottom:0;height:32%;
+    background:linear-gradient(180deg,rgba(255,190,120,.16),rgba(0,0,0,.5));
+    border-top:1px solid rgba(255,255,255,.14)}
+  .light{position:absolute;top:-30px;width:110px;height:125%;filter:blur(7px);
+    background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0))}
+  .light.l1{left:4%;transform:rotate(16deg)}
+  .light.l2{right:4%;transform:rotate(-16deg)}
+  #arena.shake{animation:ashake .32s}
+  @keyframes ashake{0%,100%{transform:none}20%{transform:translate(-5px,2px)}
+    40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(3px,-1px)}}
+
+  .hptop{position:absolute;top:0;left:0;right:0;padding:7px 8px;display:flex;flex-direction:column;gap:7px;z-index:5}
+  .hpr{display:flex;align-items:center;gap:6px}
+  .hpr.r{justify-content:flex-end}
+  .hpic{width:26px;height:26px;border-radius:8px;object-fit:cover;border:1.5px solid rgba(255,255,255,.55);flex:0 0 auto;background:#2a1b36}
+  .hpc{flex:1 1 auto;max-width:80%}
+  .hn{display:flex;gap:5px;align-items:baseline;font-size:10.5px;font-weight:800;color:#fff;
+    text-shadow:0 2px 4px rgba(0,0,0,.7)}
+  .hpr.r .hn{justify-content:flex-end}
+  .hn em{font-style:normal;font-size:9px;font-weight:700;color:#ffd166}
+
+  .unit{position:absolute;bottom:16px;width:88px;height:118px;z-index:4}
+  .unit.u-l{left:5%} .unit.u-r{right:5%}
+  .fig{position:absolute;inset:0;transform-origin:50% 100%;animation:bob 1.7s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .head{position:absolute;left:22px;top:0;width:44px;height:44px;border-radius:50%;overflow:hidden;
+    border:3px solid #fff;z-index:3;box-shadow:0 4px 10px rgba(0,0,0,.5);background:#2a1b36}
+  .head img{width:100%;height:100%;object-fit:cover;display:block}
+  .head.hit{animation:headHit .34s}
+  @keyframes headHit{0%,100%{box-shadow:0 4px 10px rgba(0,0,0,.5)}
+    30%{box-shadow:0 0 0 4px #ff3b5c,0 4px 16px rgba(255,0,60,.75)}}
+  .torso{position:absolute;left:25px;top:42px;width:38px;height:42px;border-radius:13px 13px 9px 9px;z-index:2}
+  .u-l .torso{background:linear-gradient(180deg,#ff9ecb,#c026d3)}
+  .u-r .torso{background:linear-gradient(180deg,#9fb3c8,#334155)}
+  .torso::after{content:"";position:absolute;left:50%;top:9px;width:13px;height:13px;margin-left:-6.5px;
+    border-radius:50%;background:rgba(255,255,255,.32)}
+  .arm{position:absolute;top:48px;width:11px;height:32px;border-radius:7px;z-index:1;transform-origin:50% 10%}
+  .u-l .arm{background:linear-gradient(180deg,#ff8fc0,#a21caf)}
+  .u-r .arm{background:linear-gradient(180deg,#8fa3b8,#1e293b)}
+  .arm.al{left:14px;transform:rotate(16deg)}
+  .arm.ar{right:14px;transform:rotate(-16deg)}
+  .leg{position:absolute;top:80px;width:13px;height:32px;border-radius:6px;z-index:1}
+  .u-l .leg{background:linear-gradient(180deg,#c026d3,#6b21a8)}
+  .u-r .leg{background:linear-gradient(180deg,#334155,#0f172a)}
+  .leg.ll{left:28px} .leg.lr{right:28px}
+  .shadow{position:absolute;bottom:-5px;left:17px;width:54px;height:11px;border-radius:50%;
+    background:rgba(0,0,0,.55);filter:blur(3px)}
+  .aura{position:absolute;left:50%;top:52%;width:100px;height:100px;margin:-50px 0 0 -50px;border-radius:50%;
+    opacity:0;pointer-events:none;z-index:0}
+  .aura.on{animation:auraUp .9s ease-out}
+  .aura.gold{background:radial-gradient(circle,rgba(255,209,102,.6),transparent 68%)}
+  .aura.dark{background:radial-gradient(circle,rgba(15,23,42,.85),transparent 68%)}
+  .aura.blue{background:radial-gradient(circle,rgba(96,165,250,.55),transparent 68%)}
+  .aura.green{background:radial-gradient(circle,rgba(125,211,160,.55),transparent 68%)}
+  @keyframes auraUp{0%{opacity:0;transform:scale(.4)}35%{opacity:1;transform:scale(1.15)}100%{opacity:0;transform:scale(1.4)}}
+
+  .fig.atkL{animation:atkL .46s ease-in-out}
+  @keyframes atkL{0%{transform:translateX(0)}28%{transform:translateX(-9px) rotate(-4deg)}
+    56%{transform:translateX(32px) rotate(7deg)}100%{transform:translateX(0)}}
+  .fig.atkR{animation:atkR .46s ease-in-out}
+  @keyframes atkR{0%{transform:translateX(0)}28%{transform:translateX(9px) rotate(4deg)}
+    56%{transform:translateX(-32px) rotate(-7deg)}100%{transform:translateX(0)}}
+  .fig.hurtL{animation:hurtL .4s}
+  @keyframes hurtL{0%{transform:translateX(0)}28%{transform:translateX(-15px) rotate(-7deg)}
+    64%{transform:translateX(7px)}100%{transform:none}}
+  .fig.hurtR{animation:hurtR .4s}
+  @keyframes hurtR{0%{transform:translateX(0)}28%{transform:translateX(15px) rotate(7deg)}
+    64%{transform:translateX(-7px)}100%{transform:none}}
+  .fig.cast{animation:castM .55s}
+  @keyframes castM{0%{transform:scale(1)}40%{transform:scale(1.14) translateY(-7px)}100%{transform:scale(1)}}
+  .fig.koL{animation:koL .95s forwards}
+  @keyframes koL{to{transform:rotate(-78deg) translateY(18px);opacity:.32}}
+  .fig.koR{animation:koR .95s forwards}
+  @keyframes koR{to{transform:rotate(78deg) translateY(18px);opacity:.32}}
+
+  .vfx{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+  .pfx{position:absolute;font-size:22px;line-height:1;opacity:0;will-change:transform;
+    transition:transform .52s cubic-bezier(.25,.8,.3,1),opacity .52s}
+  .ring{position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #fff;opacity:0;
+    transition:transform .46s ease-out,opacity .46s}
+  .num{position:absolute;font-size:22px;font-weight:900;line-height:1;opacity:0;
+    text-shadow:0 3px 8px rgba(0,0,0,.75);transition:transform .85s cubic-bezier(.2,.9,.3,1),opacity .85s}
+  .num.dmg{color:#ff5c7a} .num.crit{color:#ffd166;font-size:30px} .num.heal{color:#7dd3a0}
+  .slash{position:absolute;width:64px;height:7px;border-radius:4px;opacity:0;
+    background:linear-gradient(90deg,transparent,#fff,transparent);transition:transform .3s,opacity .3s}
+  .banner{position:absolute;top:36%;left:0;right:0;z-index:8;height:auto;margin:0;justify-content:center}
+  .log{height:84px;flex:0 0 auto}
+
   /* ---------- 结果 / 结局 ---------- */
   .rsbox{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
   .rsim{width:110px;height:110px;border-radius:26px;object-fit:cover;border:3px solid #ffd166;
@@ -204,24 +300,53 @@
       <div class="ljb" id="ljb">本宫看着呢，都给我使劲打。</div>
     </div>
 
-    <div class="fighter" id="fTop">
-      <img class="fav" id="tav" src="" alt="">
-      <div class="finfo">
-        <div class="fnm" id="tnm"></div>
-        <div class="hpbar"><i id="thp" style="width:100%"></i><b id="thpt"></b></div>
-        <div class="fskn" id="tsk"></div>
-      </div>
-    </div>
+    <div class="arena" id="arena">
+      <div class="sky"></div>
+      <div class="crowd"></div>
+      <div class="floor"></div>
+      <div class="light l1"></div><div class="light l2"></div>
 
-    <div class="banner" id="banner"></div>
-
-    <div class="fighter me" id="fMe">
-      <img class="fav" id="mav" src="" alt="">
-      <div class="finfo">
-        <div class="fnm" id="mnm"></div>
-        <div class="hpbar"><i id="mhp" style="width:100%"></i><b id="mhpt"></b></div>
-        <div class="fskn" id="msk"></div>
+      <div class="hptop">
+        <div class="hpr">
+          <img class="hpic" id="mhpimg" src="" alt="">
+          <div class="hpc">
+            <div class="hn"><span id="mhpn">—</span><em id="mhpem"></em></div>
+            <div class="hpbar"><i id="mhp" style="width:100%"></i><b id="mhpt"></b></div>
+          </div>
+        </div>
+        <div class="hpr r">
+          <div class="hpc">
+            <div class="hn"><em id="thpem"></em><span id="thpn">—</span></div>
+            <div class="hpbar"><i id="thp" style="width:100%"></i><b id="thpt"></b></div>
+          </div>
+          <img class="hpic" id="thpimg" src="" alt="">
+        </div>
       </div>
+
+      <div class="unit u-l" id="uMe">
+        <div class="shadow"></div>
+        <div class="fig" id="figMe">
+          <div class="head"><img id="uMeImg" src="" alt=""></div>
+          <div class="torso"></div>
+          <div class="arm al"></div><div class="arm ar"></div>
+          <div class="leg ll"></div><div class="leg lr"></div>
+        </div>
+        <div class="aura" id="auraMe"></div>
+      </div>
+
+      <div class="unit u-r" id="uFoe">
+        <div class="shadow"></div>
+        <div class="fig" id="figFoe">
+          <div class="head"><img id="uFoeImg" src="" alt=""></div>
+          <div class="torso"></div>
+          <div class="arm al"></div><div class="arm ar"></div>
+          <div class="leg ll"></div><div class="leg lr"></div>
+        </div>
+        <div class="aura" id="auraFoe"></div>
+      </div>
+
+      <div class="vfx" id="vfx"></div>
+      <div class="banner" id="banner"></div>
     </div>
 
     <div class="log" id="log"></div>
@@ -580,8 +705,29 @@
     $('#fightbtn').textContent='开 打 · VS '+foe.name;
   }
 
+  /* ================= 技能特效表 ================= */
+  var SKFX={
+    '龙式咆哮'  :{e:'🐉',c:'#ffd166',k:'to',  n:6},
+    '一锤定音'  :{e:'🔨',c:'#cbd5e1',k:'on',  n:2},
+    '卖萌暴击'  :{e:'💗',c:'#ff8fc0',k:'to',  n:7},
+    '怀旧滤镜'  :{e:'✨',c:'#ffe0a3',k:'self',n:5},
+    '淀粉护体'  :{e:'🥔',c:'#d6a56a',k:'self',n:3},
+    '嘴炮连击'  :{e:'💬',c:'#93c5fd',k:'to',  n:5},
+    '颜值即正义':{e:'🌹',c:'#f472b6',k:'to',  n:7},
+    '木然不动'  :{e:'🪵',c:'#a78bfa',k:'self',n:2},
+    '影分身之术':{e:'👥',c:'#60a5fa',k:'self',n:4},
+    '炼丹回血'  :{e:'💊',c:'#7dd3a0',k:'self',n:5},
+    '夜色掩护'  :{e:'🌑',c:'#1e293b',k:'on',  n:3},
+    '白嫖之手'  :{e:'💸',c:'#e2e8f0',k:'from',n:5},
+    '魅惑术'    :{e:'💜',c:'#c084fc',k:'to',  n:6},
+    '超赛变身'  :{e:'⚡',c:'#ffd166',k:'self',n:8},
+    '双面人生'  :{e:'🎭',c:'#e5e7eb',k:'self',n:4},
+    '摸鱼划水'  :{e:'🐟',c:'#67e8f9',k:'to',  n:4}
+  };
+
   /* ================= 战斗播放 ================= */
-  var playIv=null, logsEl=null;
+  var playIv=null, logsEl=null, MMAX=1, FMAX=1, bannerT=null;
+
   function playBattle(){
     var foe = matches[myMatch][0].id===myPick.id?matches[myMatch][1]:matches[myMatch][0];
     var boost = BOOST[Math.min(attempt,3)-1];
@@ -590,21 +736,128 @@
 
     show('s-battle');
     $('#bstage').textContent=stageName();
-    $('#tav').src=foe.file; $('#tnm').innerHTML=foe.name+'<em>'+foe.sk.n+'</em>'; $('#tsk').textContent=foe.sk.d;
-    $('#mav').src=myPick.file; $('#mnm').innerHTML=myPick.name+'<em>'+myPick.sk.n+'</em>'; $('#msk').textContent=myPick.sk.d;
+    MMAX=Math.round(myPick.hp*S); FMAX=Math.round(foe.hp*S);
+
+    $('#mhpimg').src=myPick.file; $('#mhpn').textContent=myPick.name; $('#mhpem').textContent=myPick.sk.n;
+    $('#thpimg').src=foe.file;    $('#thpn').textContent=foe.name;    $('#thpem').textContent=foe.sk.n;
+    $('#uMeImg').src=myPick.file; $('#uFoeImg').src=foe.file;
+    $('#auraMe').className='aura'; $('#auraFoe').className='aura';
+    $('#figMe').className='fig';   $('#figFoe').className='fig';
+    $('#vfx').innerHTML=''; $('#banner').innerHTML='';
     logsEl=$('#log'); logsEl.innerHTML='';
-    setHp('t',foe.hp,foe.hp); setHp('m',myPick.hp,myPick.hp);
+    setHp('t',FMAX,FMAX); setHp('m',MMAX,MMAX);
     $('#ljb').textContent=pick(LJ_SAY); $('#ljb').classList.remove('hot');
 
-    var i=0, delay=760;
-    $('#ff').onclick=function(){ delay= delay>220?220:760; };
+    var i=0, delay=720;
+    $('#ff').onclick=function(){ delay = delay>240?240:720; };
     function step(){
-      if(i>=res.log.length){ finishBattle(res,foe); return; }
+      if(i>=res.log.length){ playIv=setTimeout(function(){ finishBattle(res,foe); },950); return; }
       applyLog(res.log[i], foe);
       i++;
       playIv=setTimeout(step, delay);
     }
-    playIv=setTimeout(step, 500);
+    playIv=setTimeout(step, 600);
+  }
+
+  /* ---------- 画面驱动 ---------- */
+  function figOf(side){ return document.getElementById(side==='me'?'figMe':'figFoe'); }
+  function geo(side){
+    var a=$('#arena'), w=a.clientWidth||380, h=a.clientHeight||200;
+    return {x:(side==='me'?0.17:0.83)*w, y:Math.max(46,h-112), w:w, h:h};
+  }
+  function anim(side,type){
+    var f=figOf(side), L=(side==='me');
+    var cls = type==='atk' ? (L?'atkL':'atkR') : (L?'hurtL':'hurtR');
+    f.classList.remove('atkL','atkR','hurtL','hurtR','cast');
+    void f.offsetWidth; f.classList.add(cls);
+    setTimeout(function(){ f.classList.remove(cls); }, type==='atk'?480:420);
+  }
+  function castAnim(side){
+    var f=figOf(side);
+    f.classList.remove('atkL','atkR','hurtL','hurtR','cast');
+    void f.offsetWidth; f.classList.add('cast');
+    setTimeout(function(){ f.classList.remove('cast'); },580);
+  }
+  function koAnim(which){
+    var f=document.getElementById(which==='Me'?'figMe':'figFoe');
+    f.classList.remove('atkL','atkR','hurtL','hurtR','cast');
+    void f.offsetWidth; f.classList.add(which==='Me'?'koL':'koR');
+  }
+  function headHit(side){
+    var h=document.querySelector('#u'+(side==='me'?'Me':'Foe')+' .head');
+    if(!h) return;
+    h.classList.remove('hit'); void h.offsetWidth; h.classList.add('hit');
+  }
+  function shake(){
+    var a=$('#arena'); a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake');
+  }
+  function banner(txt){
+    var b=$('#banner'); b.innerHTML='<span>'+txt+'</span>';
+    clearTimeout(bannerT);
+    bannerT=setTimeout(function(){ b.innerHTML=''; },1450);
+  }
+  function ringAt(x,y,color){
+    var v=$('#vfx'), r=document.createElement('div');
+    r.className='ring'; r.style.left=(x-12)+'px'; r.style.top=(y-12)+'px';
+    r.style.borderColor=color||'#fff';
+    v.appendChild(r);
+    setTimeout(function(){ r.style.opacity='.95'; r.style.transform='scale(3.4)'; },16);
+    setTimeout(function(){ r.style.opacity='0'; },310);
+    setTimeout(function(){ if(r.parentNode) r.parentNode.removeChild(r); },820);
+  }
+  function shieldFx(side,color){
+    var P=geo(side), v=$('#vfx'), s=document.createElement('div');
+    s.className='ring'; s.style.left=(P.x-32)+'px'; s.style.top=(P.y-46)+'px';
+    s.style.width='64px'; s.style.height='64px'; s.style.borderColor=color||'#ffd166';
+    v.appendChild(s);
+    setTimeout(function(){ s.style.opacity='.9'; s.style.transform='scale(1.12)'; },16);
+    setTimeout(function(){ s.style.opacity='0'; s.style.transform='scale(1.5)'; },430);
+    setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); },920);
+  }
+  function popNum(side,txt,cls){
+    var P=geo(side), v=$('#vfx'), n=document.createElement('div');
+    n.className='num '+cls; n.textContent=txt;
+    n.style.left=(P.x-16)+'px'; n.style.top=(P.y-38)+'px';
+    v.appendChild(n);
+    setTimeout(function(){ n.style.opacity='1'; n.style.transform='translateY(-42px) scale(1.1)'; },16);
+    setTimeout(function(){ n.style.opacity='0'; },640);
+    setTimeout(function(){ if(n.parentNode) n.parentNode.removeChild(n); },1040);
+  }
+  function burst(cfg,aside,dside){
+    var A=geo(aside), D=geo(dside||aside), v=$('#vfx');
+    for(var i=0;i<(cfg.n||3);i++){
+      (function(i){
+        setTimeout(function(){
+          var p=document.createElement('div');
+          p.className='pfx'; p.textContent=cfg.e;
+          var sx,sy,dx,dy,k=cfg.k||'to';
+          if(k==='from'){ sx=D.x; sy=D.y; dx=A.x-D.x; dy=A.y-D.y; }
+          else if(k==='self'){ sx=A.x+(Math.random()*40-20); sy=A.y; dx=(Math.random()*80-40); dy=-(38+Math.random()*46); }
+          else if(k==='on'){ sx=D.x+(Math.random()*60-30); sy=D.y-64; dx=(Math.random()*26-13); dy=76; }
+          else { sx=A.x; sy=A.y; dx=D.x-A.x; dy=D.y-A.y+(Math.random()*32-16); }
+          if(cfg.big) p.style.fontSize='34px';
+          p.style.left=(sx-11)+'px'; p.style.top=(sy-11)+'px';
+          v.appendChild(p);
+          setTimeout(function(){
+            p.style.opacity='1';
+            p.style.transform='translate('+dx+'px,'+dy+'px) scale('+(k==='self'?1.4:1.25)+') rotate('+(Math.random()*140-70)+'deg)';
+          },16);
+          setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); },800);
+        }, i*55);
+      })(i);
+    }
+    if(cfg.k!=='self') setTimeout(function(){ ringAt(D.x,D.y,cfg.c); },260);
+  }
+  function vfxCast(sk,aside,dside){
+    var cfg=SKFX[sk];
+    if(!cfg) return;
+    castAnim(aside);
+    if(cfg.k==='self'||cfg.k==='on') shieldFx(cfg.k==='on'?(dside||aside):aside, cfg.c);
+    if(sk==='超赛变身'){ var au=document.getElementById(aside==='me'?'auraMe':'auraFoe'); au.className='aura gold on'; }
+    if(sk==='夜色掩护'){ var au2=document.getElementById((dside||aside)==='me'?'auraMe':'auraFoe'); au2.className='aura dark on'; }
+    if(sk==='影分身之术'){ var au3=document.getElementById(aside==='me'?'auraMe':'auraFoe'); au3.className='aura blue on'; }
+    if(sk==='炼丹回血'||sk==='怀旧滤镜'){ var au4=document.getElementById(aside==='me'?'auraMe':'auraFoe'); au4.className='aura green on'; }
+    burst(cfg,aside,dside||aside);
   }
   function setHp(who,hp,max){
     $('#'+who+'hp').style.width=Math.max(0,hp/max*100)+'%';
@@ -618,41 +871,49 @@
       push('<span class="y">👑 灵姐：</span>'+e.txt);
       return;
     }
-    if(e.t==='end') return;
+    if(e.t==='end'){
+      koAnim(e.w===myPick.name ? 'Foe' : 'Me');
+      return;
+    }
     if(e.t==='sk'){
-      $('#banner').innerHTML='<span>'+e.sk+'　'+e.txt+'</span>';
-      setTimeout(function(){ if($('#banner').firstChild&&$('#banner').firstChild.textContent.indexOf(e.sk)===0) $('#banner').innerHTML=''; },1300);
+      banner(e.sk+'　'+e.txt);
+      vfxCast(e.sk, isMe(e.who)?'me':'foe', isMe(e.who)?'foe':'me');
       push('<b>'+e.who+'</b> 触发 <span class="y">「'+e.sk+'」</span> '+e.txt);
       return;
     }
-    if(e.t==='miss'){ push('<b>'+e.who+'</b> 攻击落空了'); return; }
-    if(e.t==='block'){ push('<b>'+e.who+'</b> 挡了下来'); return; }
+    if(e.t==='miss'){
+      anim(isMe(e.who)?'me':'foe','atk');
+      push('<b>'+e.who+'</b> 攻击落空了');
+      return;
+    }
+    if(e.t==='block'){
+      var bs=isMe(e.who)?'me':'foe';
+      shieldFx(bs,'#a78bfa');
+      push('<b>'+e.who+'</b> 挡了下来');
+      return;
+    }
     if(e.t==='heal'){
-      var m=isMe(e.who), w=m?'m':'t';
-      var cur=parseFloat($('#'+w+'hp').style.width)/100, mx=m?myPick.hp:foe.hp;
+      var m=isMe(e.who), w=m?'m':'t', hs=m?'me':'foe';
+      var cur=parseFloat($('#'+w+'hp').style.width)/100, mx=m?MMAX:FMAX;
       setHp(w, cur*mx+e.v, mx);
-      flt(m?'fMe':'fTop','+'+e.v,'heal');
+      popNum(hs,'+'+e.v,'heal');
+      burst({e:'💚',c:'#7dd3a0',k:'self',n:4}, hs, hs);
       push('<b>'+e.who+'</b> 回复 <span class="g">'+e.v+'</span> 点血');
       return;
     }
     if(e.t==='atk'){
-      var vm=isMe(e.to), w2=vm?'m':'t', mx2=vm?myPick.hp:foe.hp;
+      var vm=isMe(e.to), w2=vm?'m':'t', mx2=vm?MMAX:FMAX;
       var cur2=parseFloat($('#'+w2+'hp').style.width)/100*mx2;
-      var nh=Math.max(0,cur2-e.dmg);
-      setHp(w2,nh,mx2);
-      flt(vm?'fMe':'fTop','-'+e.dmg,'dmg'+(e.crit?' crit':''));
-      var el=document.getElementById(vm?'fMe':'fTop');
-      el.classList.remove('hurt'); void el.offsetWidth; el.classList.add('hurt');
+      setHp(w2, Math.max(0,cur2-e.dmg), mx2);
+      var aside=isMe(e.who)?'me':'foe', dside=vm?'me':'foe';
+      anim(aside,'atk'); anim(dside,'hurt'); headHit(dside);
+      if(e.sk) vfxCast(e.sk, aside, dside);
+      else burst({e:'💥',c:'#ff5c7a',k:'to',n:2}, aside, dside);
+      popNum(dside,'-'+e.dmg, e.crit?'crit':'dmg');
+      if(e.crit) shake();
       push('<b>'+e.who+'</b> → '+e.to+' <span class="r'+(e.crit?' y':'')+'">'+e.dmg+(e.crit?' 暴击!':'')+'</span>'+(e.sk?'　<span class="y">['+e.sk+']</span>':''));
       return;
     }
-  }
-  function flt(hostId,txt,cls){
-    var host=document.getElementById(hostId);
-    var s=document.createElement('div');
-    s.className='float '+cls; s.textContent=txt;
-    host.appendChild(s);
-    setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); },900);
   }
   function push(html){
     var d=document.createElement('div'); d.className='lg'; d.innerHTML=html;
