@@ -225,6 +225,10 @@
   .num.dmg{color:#ff5c7a} .num.crit{color:#ffd166;font-size:30px} .num.heal{color:#7dd3a0}
   .slash{position:absolute;width:64px;height:7px;border-radius:4px;opacity:0;
     background:linear-gradient(90deg,transparent,#fff,transparent);transition:transform .3s,opacity .3s}
+  .spark{position:absolute;width:6px;height:6px;border-radius:50%;opacity:0;
+    transition:transform .44s cubic-bezier(.2,.9,.3,1),opacity .44s}
+  .boom{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;
+    opacity:0;transition:transform .4s ease-out,opacity .4s}
   .banner{position:absolute;top:36%;left:0;right:0;z-index:8;height:auto;margin:0;justify-content:center}
   .log{height:84px;flex:0 0 auto}
 
@@ -725,6 +729,26 @@
     '摸鱼划水'  :{e:'🐟',c:'#67e8f9',k:'to',  n:4}
   };
 
+  /* 普攻特效表：e 粒子 · c 主色 · s 出手方式 jab连击/beam气刃/drop天降/wave扩散/multi扇形 */
+  var ATKFX={
+    'Jackie':{e:'👊',c:'#ffd166',s:'jab',  n:3},
+    '一锤'  :{e:'🔩',c:'#cbd5e1',s:'drop', n:2},
+    '兰尼'  :{e:'🐾',c:'#ff8fc0',s:'jab',  n:3},
+    '回忆'  :{e:'🕰️',c:'#ffe0a3',s:'wave', n:3},
+    '土豆'  :{e:'🥔',c:'#d6a56a',s:'drop', n:2},
+    '大炮哥':{e:'🔊',c:'#93c5fd',s:'wave', n:4},
+    '小郎君':{e:'💌',c:'#f472b6',s:'multi',n:5},
+    '木'    :{e:'🍃',c:'#a78bfa',s:'multi',n:4},
+    '纳鲁托':{e:'🌀',c:'#60a5fa',s:'beam', n:3},
+    '老君'  :{e:'☯️',c:'#7dd3a0',s:'beam', n:2},
+    '老夜'  :{e:'🌙',c:'#818cf8',s:'beam', n:2},
+    '老白'  :{e:'🧾',c:'#e2e8f0',s:'multi',n:4},
+    '诱惑'  :{e:'💋',c:'#c084fc',s:'multi',n:5},
+    '超7'  :{e:'✴️',c:'#ffd166',s:'beam', n:3},
+    '阿祖'  :{e:'🃏',c:'#e5e7eb',s:'jab',  n:3},
+    '鱼'    :{e:'💦',c:'#67e8f9',s:'wave', n:4}
+  };
+
   /* ================= 战斗播放 ================= */
   var playIv=null, logsEl=null, MMAX=1, FMAX=1, bannerT=null;
 
@@ -848,6 +872,82 @@
     }
     if(cfg.k!=='self') setTimeout(function(){ ringAt(D.x,D.y,cfg.c); },260);
   }
+  function sparks(x,y,color,n){
+    var v=$('#vfx'), N=n||5;
+    for(var i=0;i<N;i++){
+      (function(i){
+        var s=document.createElement('div');
+        s.className='spark'; s.style.background=color||'#fff';
+        s.style.boxShadow='0 0 8px '+(color||'#fff');
+        s.style.left=(x-3)+'px'; s.style.top=(y-3)+'px';
+        v.appendChild(s);
+        var ang=(Math.PI*2*i)/N+Math.random()*.7, d=26+Math.random()*32;
+        setTimeout(function(){
+          s.style.opacity='1';
+          s.style.transform='translate('+(Math.cos(ang)*d).toFixed(1)+'px,'+(Math.sin(ang)*d-8).toFixed(1)+'px) scale(.4)';
+        },16);
+        setTimeout(function(){ if(s.parentNode) s.parentNode.removeChild(s); },640);
+      })(i);
+    }
+  }
+  function boomAt(x,y,color){
+    var v=$('#vfx'), b=document.createElement('div');
+    b.className='boom';
+    b.style.background='radial-gradient(circle,'+(color||'#fff')+',transparent 70%)';
+    b.style.left=(x-5)+'px'; b.style.top=(y-5)+'px';
+    v.appendChild(b);
+    setTimeout(function(){ b.style.opacity='.95'; b.style.transform='scale(9)'; },16);
+    setTimeout(function(){ b.style.opacity='0'; },270);
+    setTimeout(function(){ if(b.parentNode) b.parentNode.removeChild(b); },720);
+  }
+  function normalAtk(aside,dside,name,crit){
+    var cfg=ATKFX[name]||{e:'💥',c:'#ff5c7a',s:'jab',n:3};
+    var A=geo(aside), D=geo(dside), v=$('#vfx'), L=(aside==='me');
+    // 气刃：一道带辉光的光刃扫过去
+    if(cfg.s==='beam'){
+      var sl=document.createElement('div');
+      sl.className='slash';
+      sl.style.left=(A.x-32)+'px'; sl.style.top=(A.y-4)+'px';
+      sl.style.background='linear-gradient(90deg,transparent,'+cfg.c+',transparent)';
+      sl.style.boxShadow='0 0 12px '+cfg.c;
+      v.appendChild(sl);
+      setTimeout(function(){
+        sl.style.opacity='1';
+        sl.style.transform='translate('+(D.x-A.x)+'px,0) scaleX(1.7)'+(L?'':' rotate(180deg)');
+      },16);
+      setTimeout(function(){ sl.style.opacity='0'; },210);
+      setTimeout(function(){ if(sl.parentNode) sl.parentNode.removeChild(sl); },620);
+    }
+    var n=cfg.n+(crit?2:0)+(Math.random()<.5?1:0);
+    var gap=(cfg.s==='jab'?42:58);
+    for(var i=0;i<n;i++){
+      (function(i){
+        setTimeout(function(){
+          var p=document.createElement('div');
+          p.className='pfx'; p.textContent=cfg.e;
+          var sx=A.x, sy=A.y, dx, dy, sc=1.25;
+          if(cfg.s==='drop'){ sx=D.x+(Math.random()*70-35); sy=D.y-92; dx=(Math.random()*20-10); dy=98; sc=1.5; }
+          else if(cfg.s==='wave'){ dx=D.x-A.x; dy=(i-(n-1)/2)*26+(Math.random()*14-7); }
+          else if(cfg.s==='multi'){ dx=D.x-A.x+(Math.random()*30-15); dy=(i-(n-1)/2)*22+(Math.random()*12-6); }
+          else if(cfg.s==='beam'){ dx=D.x-A.x; dy=(Math.random()*24-12); sc=1.45; }
+          else { dx=D.x-A.x; dy=(Math.random()*18-9); sc=1.15; }
+          if(crit) p.style.fontSize='28px';
+          p.style.left=(sx-11)+'px'; p.style.top=(sy-11)+'px';
+          v.appendChild(p);
+          setTimeout(function(){
+            p.style.opacity='1';
+            p.style.transform='translate('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px) scale('+sc+') rotate('+(Math.random()*160-80)+'deg)';
+          },16);
+          setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); },780);
+        }, i*gap);
+      })(i);
+    }
+    setTimeout(function(){
+      ringAt(D.x,D.y,crit?'#ffd166':cfg.c);
+      sparks(D.x,D.y,crit?'#ffd166':cfg.c, crit?9:5);
+      if(crit) boomAt(D.x,D.y,cfg.c);
+    }, cfg.s==='beam'?130:250);
+  }
   function vfxCast(sk,aside,dside){
     var cfg=SKFX[sk];
     if(!cfg) return;
@@ -908,7 +1008,7 @@
       var aside=isMe(e.who)?'me':'foe', dside=vm?'me':'foe';
       anim(aside,'atk'); anim(dside,'hurt'); headHit(dside);
       if(e.sk) vfxCast(e.sk, aside, dside);
-      else burst({e:'💥',c:'#ff5c7a',k:'to',n:2}, aside, dside);
+      else normalAtk(aside, dside, e.who, e.crit);
       popNum(dside,'-'+e.dmg, e.crit?'crit':'dmg');
       if(e.crit) shake();
       push('<b>'+e.who+'</b> → '+e.to+' <span class="r'+(e.crit?' y':'')+'">'+e.dmg+(e.crit?' 暴击!':'')+'</span>'+(e.sk?'　<span class="y">['+e.sk+']</span>':''));
