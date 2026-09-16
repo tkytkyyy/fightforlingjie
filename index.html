@@ -133,7 +133,7 @@
   @keyframes lgin{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 
   /* ---------- 战斗场景 ---------- */
-  .arena{flex:1 1 auto;min-height:212px;position:relative;overflow:hidden;border-radius:18px;margin:2px 0 6px;
+  .arena{flex:1 1 auto;min-height:230px;position:relative;overflow:hidden;border-radius:18px;margin:2px 0 6px;
     background:linear-gradient(180deg,#241533 0%,#3a2049 52%,#4b2a3c 100%)}
   .sky{position:absolute;inset:0;background:
     radial-gradient(60% 40% at 50% 6%,rgba(255,214,150,.22),transparent 70%),
@@ -299,6 +299,92 @@
   @keyframes combIn{0%{opacity:0;transform:scale(.4) rotate(-14deg)}
     28%{opacity:1;transform:scale(1.28) rotate(5deg)}100%{opacity:0;transform:scale(1) rotate(0)}}
 
+  /* ---------- v3：精致场景 + SVG 立绘 + 格斗动作 ---------- */
+  .skyline{position:absolute;left:0;right:0;bottom:26%;height:26%;opacity:.45;z-index:0;
+    background:linear-gradient(180deg,#3d2757,#150b21);
+    clip-path:polygon(0% 100%,0% 58%,6% 58%,6% 40%,13% 40%,13% 64%,20% 64%,20% 32%,27% 32%,27% 60%,
+      35% 60%,35% 46%,44% 46%,44% 68%,52% 68%,52% 36%,60% 36%,60% 60%,68% 60%,68% 44%,76% 44%,
+      76% 62%,84% 62%,84% 38%,92% 38%,92% 58%,100% 58%,100% 100%)}
+  .stands{position:absolute;left:0;right:0;bottom:24%;height:13%;z-index:0;opacity:.8;
+    background-image:radial-gradient(circle,rgba(255,235,210,.6) 43%,transparent 44%);
+    background-size:11px 11px}
+  .stands.cheer{animation:cheer .5s}
+  .signs{position:absolute;left:0;right:0;bottom:26%;height:18px;z-index:1;display:flex;
+    justify-content:space-around;align-items:flex-end;padding:0 10px;font-size:12px;opacity:.85}
+  .signs i{font-style:normal;display:block}
+  .signs.cheer i{animation:sg .55s}
+  @keyframes sg{40%{transform:translateY(-5px) rotate(-10deg)}}
+  .spot{position:absolute;left:50%;top:-34%;width:130%;height:96%;margin-left:-65%;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse at 50% 0%,rgba(255,242,205,.22),transparent 64%)}
+  .mat{position:absolute;left:-8%;right:-8%;bottom:0;height:27%;z-index:1;
+    background:linear-gradient(180deg,rgba(255,196,130,.16),rgba(0,0,0,.5));
+    border-top:2px solid rgba(255,255,255,.18);border-radius:50% 50% 0 0/20% 20% 0 0;
+    box-shadow:inset 0 16px 34px rgba(0,0,0,.45)}
+  .post{position:absolute;bottom:0;width:10px;height:36%;z-index:2;border-radius:3px;
+    background:linear-gradient(180deg,#f1f5f9,#5b6472);box-shadow:0 0 9px rgba(0,0,0,.55)}
+  .post.pl{left:1.5%} .post.pr{right:1.5%}
+  .rope{position:absolute;left:1.5%;right:1.5%;height:2px;z-index:2;
+    background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,140,170,.85),rgba(255,255,255,.5));
+    box-shadow:0 1px 4px rgba(0,0,0,.6)}
+  .rope.r1{bottom:30%} .rope.r2{bottom:22.5%} .rope.r3{bottom:15%}
+  .floor{z-index:0;opacity:.55}
+
+  .unit{width:100px;height:132px;bottom:10px}
+  .unit.u-l{left:2%} .unit.u-r{right:2%}
+  .fig.manual.manual{animation:none}
+  .fig.tired{animation:tired .55s ease-in-out infinite}
+  @keyframes tired{0%,100%{transform:translate(0,0)}
+    25%{transform:translate(-1.3px,0) rotate(-.9deg)}75%{transform:translate(1.3px,0) rotate(.9deg)}}
+  .csvg{position:absolute;left:0;top:0;width:100px;height:132px;display:block;overflow:visible}
+  .u-r .csvg{transform:scaleX(-1)}
+  .hdimg{position:absolute;left:30px;top:4px;width:40px;height:40px;border-radius:50%;object-fit:cover;
+    border:3px solid #fff;z-index:3;background:#2a1b36;box-shadow:0 3px 9px rgba(0,0,0,.55)}
+  .hdimg.hit{animation:headHit .34s}
+  .csvg .sh{fill:rgba(0,0,0,.5)}
+  .csvg .tor{stroke:rgba(0,0,0,.4);stroke-width:1.6;stroke-linejoin:round}
+  .csvg .aL,.csvg .aR{stroke:rgba(0,0,0,.32);stroke-width:1.4;stroke-linejoin:round}
+  .csvg .lg{stroke:rgba(0,0,0,.32);stroke-width:1.3}
+  .csvg .bt{fill:#2b1b33;stroke:rgba(0,0,0,.45);stroke-width:1}
+  .csvg .gl{fill:#4a3324;stroke:rgba(0,0,0,.4);stroke-width:1}
+  .csvg .boot{fill:#241a2e;stroke:rgba(0,0,0,.45);stroke-width:1}
+  .csvg .hr{stroke:rgba(0,0,0,.35);stroke-width:1.2}
+  .csvg .aL{transform-origin:38px 54px} .csvg .aR{transform-origin:62px 54px}
+  .csvg .lgA{transform-origin:45px 86px} .csvg .lgB{transform-origin:55px 86px}
+
+  /* 格斗动作 */
+  .aR.jab{animation:jab .2s ease-out}
+  @keyframes jab{0%{transform:rotate(0)}42%{transform:rotate(-102deg)}100%{transform:rotate(0)}}
+  .aR.hook{animation:hook .23s ease-out}
+  @keyframes hook{0%{transform:rotate(0)}42%{transform:rotate(-142deg) translate(5px,-2px)}100%{transform:rotate(0)}}
+  .aR.up{animation:upc .25s ease-out}
+  @keyframes upc{0%{transform:rotate(0)}42%{transform:rotate(-158deg) translate(0,-9px)}100%{transform:rotate(0)}}
+  .aR.slam{animation:slam .32s ease-out}
+  @keyframes slam{0%{transform:rotate(0)}34%{transform:rotate(-172deg)}62%{transform:rotate(-46deg)}100%{transform:rotate(0)}}
+  .aR.chop{animation:chop .24s ease-out}
+  @keyframes chop{0%{transform:rotate(0)}42%{transform:rotate(-118deg) translate(3px,4px)}100%{transform:rotate(0)}}
+  .lgB.kick{animation:kick .3s ease-out}
+  @keyframes kick{0%{transform:rotate(0)}42%{transform:rotate(-66deg)}100%{transform:rotate(0)}}
+  .aL.gd{animation:gd .22s}
+  @keyframes gd{0%{transform:rotate(0)}50%{transform:rotate(38deg)}100%{transform:rotate(0)}}
+  .aL.castU,.aR.castU{animation:castU .5s ease-out}
+  @keyframes castU{0%{transform:rotate(0)}45%{transform:rotate(-120deg)}100%{transform:rotate(0)}}
+  .fig.winpose{animation:winpose 1.4s ease-in-out infinite}
+  @keyframes winpose{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.06)}}
+
+  .sweat{position:absolute;left:66px;top:8px;font-size:13px;z-index:6;opacity:0;pointer-events:none}
+  .u-r .sweat{left:auto;right:66px}
+  .sweat.on{animation:swt 1.1s ease-in-out infinite}
+  @keyframes swt{0%{opacity:0;transform:translateY(0) scale(.7)}25%{opacity:1}
+    100%{opacity:0;transform:translateY(13px) scale(1)}}
+  .fin{position:absolute;inset:0;z-index:9;pointer-events:none;opacity:0;transition:opacity .3s;
+    background:radial-gradient(circle at 50% 42%,transparent 26%,rgba(0,0,0,.88) 100%)}
+  .fin.on{opacity:1}
+  .fin b{position:absolute;left:0;right:0;top:32%;text-align:center;font-size:38px;font-weight:900;
+    letter-spacing:12px;color:#fff;text-shadow:0 0 30px #ff4d6d,0 6px 18px rgba(0,0,0,.85);
+    animation:finIn .6s cubic-bezier(.2,1.6,.35,1) both}
+  @keyframes finIn{0%{transform:scale(2.6);opacity:0;filter:blur(10px)}
+    55%{transform:scale(1);opacity:1;filter:blur(0)}100%{transform:scale(1.05);opacity:1}}
+
   /* ---------- 结果 / 结局 ---------- */
   .rsbox{flex:1 1 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
   .rsim{width:110px;height:110px;border-radius:26px;object-fit:cover;border:3px solid #ffd166;
@@ -324,9 +410,10 @@
   .stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
   .stars span{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.35;animation:tw 3s ease-in-out infinite}
   @keyframes tw{0%,100%{opacity:.12}50%{opacity:.7}}
-  @media (max-height:660px){
-    .tt{font-size:20px}.fav{width:52px;height:52px}.ljav{width:40px;height:40px}
-    .log{font-size:11px}.btn{padding:12px 0}
+  @media (max-height:680px){
+    .tt{font-size:20px}.log{font-size:11px}.btn{padding:12px 0}
+    .unit{transform:scale(.84);transform-origin:50% 100%}
+    .arena{min-height:206px}
   }
 </style>
 </head>
@@ -368,12 +455,18 @@
     </div>
     <div class="arena" id="arena">
       <div class="sky"></div>
-      <div class="crowd" id="crowd"></div>
-      <div class="ropes"></div>
-      <div class="floor"></div>
+      <div class="skyline"></div>
+      <div class="stands" id="stands"></div>
+      <div class="signs" id="signs"></div>
       <div class="light l1"></div><div class="light l2"></div>
+      <div class="spot"></div>
+      <div class="mat"></div>
+      <div class="post pl"></div><div class="post pr"></div>
+      <div class="rope r1"></div><div class="rope r2"></div><div class="rope r3"></div>
+      <div class="floor"></div>
       <div class="petals" id="petals"></div>
       <div class="danger" id="danger"></div>
+      <div class="fin" id="fin"></div>
 
       <div class="hptop">
         <div class="hpr">
@@ -393,29 +486,15 @@
       </div>
 
       <div class="unit u-l" id="uMe">
-        <div class="shadow"></div>
-        <div class="fig" id="figMe">
-          <div class="hair" id="hairMe"></div>
-          <div class="head"><img id="uMeImg" src="" alt=""></div>
-          <div class="torso"></div>
-          <div class="arm al"></div><div class="arm ar"></div>
-          <div class="leg ll"></div><div class="leg lr"></div>
-          <div class="wep" id="wepMe"></div>
-        </div>
+        <div class="fig" id="figMe"></div>
+        <div class="sweat" id="swMe"></div>
         <div class="emo" id="emoMe"></div>
         <div class="aura" id="auraMe"></div>
       </div>
 
       <div class="unit u-r" id="uFoe">
-        <div class="shadow"></div>
-        <div class="fig" id="figFoe">
-          <div class="hair" id="hairFoe"></div>
-          <div class="head"><img id="uFoeImg" src="" alt=""></div>
-          <div class="torso"></div>
-          <div class="arm al"></div><div class="arm ar"></div>
-          <div class="leg ll"></div><div class="leg lr"></div>
-          <div class="wep" id="wepFoe"></div>
-        </div>
+        <div class="fig" id="figFoe"></div>
+        <div class="sweat" id="swFoe"></div>
         <div class="emo" id="emoFoe"></div>
         <div class="aura" id="auraFoe"></div>
       </div>
@@ -855,22 +934,22 @@
 
     $('#mhpimg').src=myPick.file; $('#mhpn').textContent=myPick.name; $('#mhpem').textContent=myPick.sk.n;
     $('#thpimg').src=foe.file;    $('#thpn').textContent=foe.name;    $('#thpem').textContent=foe.sk.n;
-    curFoe=foe;
+    curFoe=foe; speedMul=1;
     $('#uMeImg').src=myPick.file; $('#uFoeImg').src=foe.file;
     $('#auraMe').className='aura'; $('#auraFoe').className='aura';
     $('#figMe').className='fig';   $('#figFoe').className='fig';
     $('#vfx').innerHTML=''; $('#banner').innerHTML='';
+    var fin=$('#fin'); if(fin){ fin.classList.remove('on'); fin.innerHTML=''; }
     logsEl=$('#log'); logsEl.innerHTML='';
     setHp('t',FMAX,FMAX); setHp('m',MMAX,MMAX);
 
-    // v2：专属配色 / 武器 / 头发 / 场景色调 / 入场
+    // 专属配色 / 武器 / 场景色调 / 入场
     paint('uMe', CLR[myPick.name]||'#c026d3');
     paint('uFoe', CLR[foe.name]||'#334155');
     $('#wepMe').textContent=WEP[myPick.name]||'';
     $('#wepFoe').textContent=WEP[foe.name]||'';
-    $('#hairMe').style.background=mix(CLR[myPick.name]||'#c026d3','#000000',.45);
-    $('#hairFoe').style.background=mix(CLR[foe.name]||'#334155','#000000',.45);
     $('#danger').classList.remove('on');
+    $('#swMe').classList.remove('on'); $('#swFoe').classList.remove('on');
     comboN=0; comboSide='';
     $('#comb').classList.remove('on');
     arenaTheme(); petals(); entrance();
@@ -881,7 +960,7 @@
       if(i>=res.log.length){ playIv=setTimeout(function(){ finishBattle(res,foe); },950); return; }
       applyLog(res.log[i], foe);
       i++;
-      playIv=setTimeout(step, delay);
+      playIv=setTimeout(step, delay*speedMul);   // 终结技时会放慢
     }
     playIv=setTimeout(step, 600);
   }
@@ -890,7 +969,7 @@
   function figOf(side){ return document.getElementById(side==='me'?'figMe':'figFoe'); }
   function geo(side){
     var a=$('#arena'), w=a.clientWidth||380, h=a.clientHeight||200;
-    return {x:(side==='me'?0.17:0.83)*w, y:Math.max(46,h-112), w:w, h:h};
+    return {x:(side==='me'?0.16:0.84)*w, y:Math.max(46,h-104), w:w, h:h};
   }
   function anim(side,type){
     var f=figOf(side), L=(side==='me');
@@ -912,10 +991,42 @@
     void f.offsetWidth; f.classList.add(which==='Me'?'koL':'koR');
   }
   function headHit(side){
-    var h=document.querySelector('#u'+(side==='me'?'Me':'Foe')+' .head');
+    var h=document.querySelector('#u'+(side==='me'?'Me':'Foe')+' .hdimg');
     if(!h) return;
     h.classList.remove('hit'); void h.offsetWidth; h.classList.add('hit');
   }
+  function svgOf(side){ return document.querySelector('#u'+(side==='me'?'Me':'Foe')+' .csvg'); }
+  function pose(side,kind){
+    var s=svgOf(side); if(!s) return;
+    var aR=s.querySelector('.aR'), aL=s.querySelector('.aL'), lg=s.querySelector('.lgB');
+    var n=document.querySelector('#u'+(side==='me'?'Me':'Foe')+' .unit');
+    [aR,aL,lg].forEach(function(e){ if(e){ e.classList.remove('jab','hook','up','slam','chop','kick','gd','castU'); } });
+    void s.offsetWidth;
+    if(kind==='jab'||kind==='hook'||kind==='up'||kind==='slam'||kind==='chop'){
+      if(aR) aR.classList.add(kind);
+      if(aL) aL.classList.add('gd');
+    } else if(kind==='kick'){ if(lg) lg.classList.add('kick'); }
+    else if(kind==='cast'){ if(aR) aR.classList.add('castU'); if(aL) aL.classList.add('castU'); }
+  }
+  /* 每人一套连招：jab直拳 hook勾拳 up上勾 slam抡砸 chop手刀 kick踢击 */
+  var MOVES={
+    'Jackie':['jab','hook','up'],
+    '一锤'  :['slam','slam','up'],
+    '兰尼'  :['chop','chop','jab'],
+    '回忆'  :['jab','chop'],
+    '土豆'  :['slam','slam','slam'],
+    '大炮哥':['hook','slam','jab'],
+    '小郎君':['chop','jab'],
+    '木'    :['slam','chop','slam'],
+    '纳鲁托':['jab','kick','up'],
+    '老君'  :['chop','chop'],
+    '老夜'  :['chop','kick','chop'],
+    '老白'  :['jab','jab'],
+    '诱惑'  :['chop','jab','chop'],
+    '超7'  :['jab','kick','up'],
+    '阿祖'  :['chop','chop','slash'],
+    '鱼'    :['kick','chop','kick']
+  };
   function shake(){
     var a=$('#arena'); a.classList.remove('shake'); void a.offsetWidth; a.classList.add('shake');
   }
@@ -928,11 +1039,53 @@
     return 'rgb('+Math.round(A[0]+(B[0]-A[0])*t)+','+Math.round(A[1]+(B[1]-A[1])*t)+','+Math.round(A[2]+(B[2]-A[2])*t)+')'; }
   function paint(uid,c){
     var u=document.getElementById(uid); if(!u) return;
-    var t=u.querySelector('.torso'), i;
-    if(t) t.style.background='linear-gradient(180deg,'+mix(c,'#ffffff',.32)+','+c+')';
-    var arms=u.querySelectorAll('.arm'), legs=u.querySelectorAll('.leg');
-    for(i=0;i<arms.length;i++) arms[i].style.background='linear-gradient(180deg,'+mix(c,'#ffffff',.12)+','+mix(c,'#000000',.30)+')';
-    for(i=0;i<legs.length;i++) legs[i].style.background='linear-gradient(180deg,'+mix(c,'#000000',.28)+','+mix(c,'#000000',.55)+')';
+    var s=u.querySelector('.csvg'); if(!s) return;
+    var suf=(uid==='uMe')?'Me':'Foe';
+    var s1=s.querySelector('#s1'+suf), s2=s.querySelector('#s2'+suf);
+    if(s1) s1.setAttribute('stop-color', mix(c,'#ffffff',.38));
+    if(s2) s2.setAttribute('stop-color', c);
+    var hr=s.querySelector('.hr'); if(hr) hr.setAttribute('fill', mix(c,'#000000',.52));
+    var aL=s.querySelector('.aL'), aR=s.querySelector('.aR');
+    var mid=mix(c,'#000000',.12);
+    if(aL) aL.setAttribute('fill', mid);
+    if(aR) aR.setAttribute('fill', mid);
+    var lgs=s.querySelectorAll('.lg');
+    for(var i=0;i<lgs.length;i++) lgs[i].setAttribute('fill', mix(c,'#000000',.38));
+  }
+  /* 用 SVG 画身体，头像图片当头（HTML img 覆盖在 SVG 上，兼容性最好） */
+  function buildUnit(uid,figId,suf){
+    var fig=document.getElementById(figId); if(!fig) return;
+    fig.innerHTML=
+      '<svg class="csvg" viewBox="0 0 100 132">'+
+      '<defs><linearGradient id="lg'+suf+'" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop id="s1'+suf+'" offset="0" stop-color="#ffffff"/>'+
+        '<stop id="s2'+suf+'" offset="1" stop-color="#c026d3"/></linearGradient></defs>'+
+      '<ellipse class="sh" cx="50" cy="127" rx="26" ry="5.5"/>'+
+      '<g class="lgs">'+
+        '<path class="lg lgA" d="M42 82 L39 111 L48 112 L49 84 Z"/>'+
+        '<path class="lg lgB" d="M58 82 L61 111 L52 112 L51 84 Z"/>'+
+        '<rect class="boot" x="35" y="108" width="15" height="10" rx="4.5"/>'+
+        '<rect class="boot" x="50" y="108" width="15" height="10" rx="4.5"/>'+
+      '</g>'+
+      '<path class="aL" d="M37 53 Q25 62 23 79 L31 82 Q33 65 42 57 Z"/>'+
+      '<path class="tor" d="M33 49 Q50 42 67 49 L65 82 Q50 88 35 82 Z" fill="url(#lg'+suf+')"/>'+
+      '<rect class="bt" x="32.5" y="73" width="35" height="7.5" rx="3"/>'+
+      '<circle class="bt" cx="50" cy="76.7" r="2.8" fill="#ffd166" stroke="none"/>'+
+      '<path class="aR" d="M63 53 Q75 62 77 79 L69 82 Q67 65 58 57 Z"/>'+
+      '<circle class="gl" cx="26" cy="83" r="6.2"/>'+
+      '<circle class="gl" cx="74" cy="83" r="6.2"/>'+
+      '<rect x="46" y="39" width="8" height="9" rx="3.5" fill="#e8b98f" stroke="none"/>'+
+      '<circle class="hr" cx="50" cy="24" r="22.5"/>'+
+      '</svg>'+
+      '<img class="hdimg" id="u'+suf+'Img" src="" alt="">'+
+      '<div class="wep" id="wep'+suf+'"></div>';
+    var sw=document.getElementById('sw'+suf); if(sw) sw.textContent='💧';
+  }
+  function initScene(){
+    buildUnit('uMe','figMe','Me');
+    buildUnit('uFoe','figFoe','Foe');
+    var sg=$('#signs');
+    if(sg){ sg.innerHTML=''; for(var i=0;i<5;i++){ var e=document.createElement('i'); e.textContent='🪧'; sg.appendChild(e); } }
   }
   function manual(side,on){
     var f=figOf(side);
@@ -1000,8 +1153,25 @@
     e.textContent=txt; e.classList.remove('on'); void e.offsetWidth; e.classList.add('on');
   }
   function cheer(){
-    var c=$('#crowd'); if(!c) return;
-    c.classList.remove('cheer'); void c.offsetWidth; c.classList.add('cheer');
+    ['#stands','#signs'].forEach(function(id){
+      var c=$(id); if(!c) return;
+      c.classList.remove('cheer'); void c.offsetWidth; c.classList.add('cheer');
+    });
+  }
+  /* 终结技：慢镜头 + 黑幕 + FINISH */
+  var speedMul=1;
+  function finishFx(loser){
+    speedMul=2.4;
+    var f=$('#fin'); if(!f) return;
+    f.innerHTML='<b>FINISH</b>'; f.classList.add('on');
+    cheer(); shake();
+    var P=geo(loser);
+    impact(P.x,P.y,true);
+    later(160,function(){ boomAt(P.x,P.y,'#ffd166'); });
+    later(360,function(){ boomAt(P.x,P.y,'#ff5c7a'); });
+    later(580,function(){ boomAt(P.x,P.y,'#ffd166'); shake(); });
+    setLjBub('灵姐：结束了。',true);
+    later(1300,function(){ f.classList.remove('on'); f.innerHTML=''; speedMul=1; });
   }
   var comboN=0, comboSide='';
   function comboFx(side){
@@ -1013,8 +1183,14 @@
     }
   }
   function updDanger(){
-    var w=parseFloat($('#mhp').style.width)/100;
-    var d=$('#danger'); if(d) d.classList.toggle('on', w>0 && w<0.28);
+    var wm=parseFloat($('#mhp').style.width)/100, wt=parseFloat($('#thp').style.width)/100;
+    var d=$('#danger'); if(d) d.classList.toggle('on', wm>0 && wm<0.28);
+    var sm=$('#swMe'), sf=$('#swFoe');                       // 残血冒汗
+    if(sm) sm.classList.toggle('on', wm>0 && wm<0.32);
+    if(sf) sf.classList.toggle('on', wt>0 && wt<0.32);
+    var fm=document.getElementById('figMe'), ff=document.getElementById('figFoe');  // 残血发抖
+    if(fm) fm.classList.toggle('tired', wm>0 && wm<0.32);
+    if(ff) ff.classList.toggle('tired', wt>0 && wt<0.32);
   }
   function setLjBub(txt,hot){
     var b=$('#ljbub'); if(!b) return;
@@ -1030,10 +1206,11 @@
     if(!w) return;
     w.classList.remove('swing'); void w.offsetWidth; w.classList.add('swing');
   }
-  function meleeAttack(aside,dside,cfg,crit){
+  function meleeAttack(aside,dside,name,cfg,crit){
     var A=geo(aside), D=geo(dside), L=(aside==='me');
-    var dir=L?1:-1, dist=Math.abs(D.x-A.x)-52;
-    if(dist<24) dist=24;
+    var dir=L?1:-1, dist=Math.abs(D.x-A.x)-58;
+    if(dist<26) dist=26;
+    var mv=MOVES[name]||['jab','hook','up'];
     var uA=document.getElementById(aside==='me'?'uMe':'uFoe');
     if(uA) uA.style.zIndex='6';               // 突进时压在对手上层
     manual(aside,true);
@@ -1045,19 +1222,21 @@
       later(95,function(){ ghost(aside, dir*dist*0.85); });
     });
     later(170,function(){
-      var hits=crit?4:3, cx=(A.x+D.x)/2+(L?-8:8);
+      var hits=crit?4:3, cx=(A.x+D.x)/2+(L?-10:10);
       for(var i=0;i<hits;i++){
         (function(i){
-          later(i*95,function(){
-            setFigT(aside, dir*(dist-(i%2?17:2)), (i%2?(L?13:-13):(L?4:-4)), 1, 85);
+          later(i*105,function(){
+            var m=mv[i%mv.length]; if(m==='slash') m='chop';
+            pose(aside,m);                                    // 每一招动作都不一样
+            setFigT(aside, dir*(dist-(i%2?18:2)), (i%2?(L?12:-12):(L?4:-4)), 1, 90);
             swingWep(aside);
             impact(cx, D.y-8, crit);
             contactFx(cfg, cx, D.y-8);
           });
         })(i);
       }
-      later(hits*95,function(){ knock(dside, dir, crit?22:13); });
-      later(hits*95+200,function(){
+      later(hits*105,function(){ knock(dside, dir, crit?22:13); });
+      later(hits*105+210,function(){
         setFigT(aside,0,0,1,255,'cubic-bezier(.4,0,.3,1)');
         later(275,function(){ manual(aside,false); if(uA) uA.style.zIndex=''; });
       });
@@ -1174,8 +1353,8 @@
   function normalAtk(aside,dside,name,crit){
     var cfg=ATKFX[name]||{e:'💥',c:'#ff5c7a',s:'jab',n:3,m:1};
     var A=geo(aside), D=geo(dside), v=$('#vfx'), L=(aside==='me');
-    if(cfg.m){ meleeAttack(aside,dside,cfg,crit); return; }   // 近身肉搏
-    emo(aside,'😤'); anim(aside,'atk');
+    if(cfg.m){ meleeAttack(aside,dside,name,cfg,crit); return; }   // 近身肉搏
+    emo(aside,'😤'); anim(aside,'atk'); pose(aside,'cast');
     // 气刃：一道带辉光的光刃扫过去
     if(cfg.s==='beam'){
       var sl=document.createElement('div');
@@ -1248,6 +1427,8 @@
       var iWon = (e.w===myPick.name);
       koAnim(iWon ? 'Foe' : 'Me');
       emo(iWon?'me':'foe','😎');
+      var wp=document.getElementById(iWon?'figMe':'figFoe');
+      if(wp) wp.classList.add('winpose');      // 赢家庆祝
       later(420,function(){ setLjBub(iWon?'灵姐：不错，本宫记住你了。':'灵姐：啧，再来一次。',true); });
       return;
     }
@@ -1280,8 +1461,10 @@
     if(e.t==='atk'){
       var vm=isMe(e.to), w2=vm?'m':'t', mx2=vm?MMAX:FMAX;
       var cur2=parseFloat($('#'+w2+'hp').style.width)/100*mx2;
-      setHp(w2, Math.max(0,cur2-e.dmg), mx2);
+      var nh=Math.max(0,cur2-e.dmg);
+      setHp(w2, nh, mx2);
       var aside=isMe(e.who)?'me':'foe', dside=vm?'me':'foe';
+      if(nh<=0) finishFx(dside);               // 打空血 → 终结技演出
       if(e.sk) vfxCast(e.sk, aside, dside);            // 技能自带蓄力 + 特效
       else normalAtk(aside, dside, e.who, e.crit);     // 普攻：近身肉搏 or 远程
       headHit(dside);
@@ -1366,6 +1549,7 @@
 
   if(typeof window!=='undefined'){ window.__FFL={runBattle:runBattle,playerBattle:playerBattle,F:F,BOOST:BOOST}; }
   starBg();
+  initScene();
   renderSelect();
 })();
 </script>
