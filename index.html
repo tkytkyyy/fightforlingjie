@@ -371,6 +371,20 @@
   .fig.winpose{animation:winpose 1.4s ease-in-out infinite}
   @keyframes winpose{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.06)}}
 
+  .btnrow{display:flex;gap:8px}
+  .btn.sm{padding:11px 0;font-size:14px;letter-spacing:2px}
+  .btn.sm.on{background:linear-gradient(135deg,#ffb703,#ff7ab8);color:#3a1f45;
+    box-shadow:0 6px 16px rgba(255,183,3,.45)}
+  .sline{position:absolute;height:2px;width:0;opacity:0;transform-origin:0 50%;z-index:6;
+    background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.95));
+    transition:width .3s ease-out,opacity .3s}
+  .dust{position:absolute;width:11px;height:11px;border-radius:50%;z-index:6;opacity:0;
+    background:radial-gradient(circle,rgba(214,196,164,.95),rgba(150,132,104,.2) 70%,transparent);
+    transition:transform .45s ease-out,opacity .45s}
+  .swave{position:absolute;width:32px;height:11px;border-radius:50%;z-index:6;opacity:0;
+    border:2px solid rgba(255,255,255,.9);transition:transform .5s ease-out,opacity .5s}
+  #arena.zoom{animation:azoom .36s ease-out}
+  @keyframes azoom{0%{transform:scale(1)}38%{transform:scale(1.06)}100%{transform:scale(1)}}
   .sweat{position:absolute;left:66px;top:8px;font-size:13px;z-index:6;opacity:0;pointer-events:none}
   .u-r .sweat{left:auto;right:66px}
   .sweat.on{animation:swt 1.1s ease-in-out infinite}
@@ -512,7 +526,10 @@
     </div>
 
     <div class="log" id="log"></div>
-    <div style="flex:0 0 auto"><button class="btn ghost" id="ff">快 进 ▶▶</button></div>
+    <div style="flex:0 0 auto" class="btnrow">
+      <button class="btn ghost sm" id="ff">快 进 ▶▶</button>
+      <button class="btn ghost sm" id="sk">跳 过 ⏭</button>
+    </div>
   </section>
 
   <!-- ============ 单场结果 ============ -->
@@ -921,6 +938,25 @@
 
   /* ================= 战斗播放 ================= */
   var playIv=null, logsEl=null, MMAX=1, FMAX=1, bannerT=null, curFoe=null;
+  var curRes=null, curIdx=0;
+  function syncFF(){
+    var b=$('#ff'); if(!b) return;
+    b.classList.toggle('on',FAST);
+    b.textContent = FAST ? '▶▶ 快进中' : '快 进 ▶▶';
+  }
+  function toggleFF(){ FAST=!FAST; syncFF(); }
+  function skipBattle(){
+    if(!curRes) return;
+    var r=curRes, f=curFoe;
+    curRes=null;
+    clearTimeout(playIv);
+    setHp('m', r.myHp, MMAX); setHp('t', r.foeHp, FMAX);
+    updDanger();
+    var v=$('#vfx'); if(v) v.innerHTML='';
+    var fin=$('#fin'); if(fin){ fin.classList.remove('on'); fin.innerHTML=''; }
+    speedMul=1;
+    finishBattle(r, f);
+  }
 
   function playBattle(){
     var foe = matches[myMatch][0].id===myPick.id?matches[myMatch][1]:matches[myMatch][0];
@@ -954,15 +990,15 @@
     $('#comb').classList.remove('on');
     arenaTheme(); petals(); entrance();
 
-    var i=0, delay=720;
-    $('#ff').onclick=function(){ delay = delay>240?240:720; };
+    curRes=res; curFoe=foe; curIdx=0;
+    syncFF();
     function step(){
-      if(i>=res.log.length){ playIv=setTimeout(function(){ finishBattle(res,foe); },950); return; }
-      applyLog(res.log[i], foe);
-      i++;
-      playIv=setTimeout(step, delay*speedMul);   // 终结技时会放慢
+      if(curIdx>=res.log.length){ playIv=setTimeout(function(){ finishBattle(res,foe); },T(950)); return; }
+      applyLog(res.log[curIdx], foe);
+      curIdx++;
+      playIv=setTimeout(step, (FAST?190:720)*speedMul);   // 快进 / 终结技慢镜头
     }
-    playIv=setTimeout(step, 600);
+    playIv=setTimeout(step, T(600));
   }
 
   /* ---------- 画面驱动 ---------- */
@@ -1092,11 +1128,14 @@
     if(on){ f.classList.add('manual'); }
     else { f.classList.remove('manual'); f.style.transition=''; f.style.transform=''; }
   }
-  function setFigT(side,x,rot,sc,dur,ease){
+  function setFigT(side,x,rot,sc,dur,ease,ty){
     var f=figOf(side);
     f.style.transition='transform '+(dur||160)+'ms '+(ease||'ease-out');
-    f.style.transform='translateX('+x+'px) rotate('+rot+'deg) scale('+(sc||1)+')';
+    f.style.transform='translate('+x+'px,'+(ty||0)+'px) rotate('+rot+'deg) scale('+(sc||1)+')';
   }
+  /* 快进：全局开关 + 动画时长缩放（不只是日志节奏） */
+  var FAST=false;
+  function T(ms){ return FAST ? Math.max(30, Math.round(ms*0.3)) : ms; }
   function ghost(side,x){
     var u=document.getElementById(side==='me'?'uMe':'uFoe'); if(!u) return;
     var g=document.createElement('div'); g.className='ghost';
@@ -1206,40 +1245,188 @@
     if(!w) return;
     w.classList.remove('swing'); void w.offsetWidth; w.classList.add('swing');
   }
+  /* ---- 功夫片式特效：速度线 / 扬尘 / 地面冲击波 / 镜头推近 ---- */
+  function speedLines(){
+    var v=$('#vfx'); if(!v) return;
+    for(var i=0;i<12;i++){
+      (function(i){
+        var s=document.createElement('div');
+        s.className='sline';
+        s.style.left='50%'; s.style.top='56%';
+        s.style.transform='rotate('+(i*30+ (i%2?8:0))+'deg)';
+        v.appendChild(s);
+        later(T(20),function(){ s.style.opacity='.9'; s.style.width='44%'; });
+        later(T(340),function(){ s.style.opacity='0'; });
+        later(T(640),function(){ if(s.parentNode) s.parentNode.removeChild(s); });
+      })(i);
+    }
+  }
+  function dust(x,y,n){
+    var v=$('#vfx'); if(!v) return;
+    for(var i=0;i<(n||8);i++){
+      (function(i){
+        var d=document.createElement('div');
+        d.className='dust';
+        d.style.left=(x-5)+'px'; d.style.top=(y-5)+'px';
+        v.appendChild(d);
+        later(T(16),function(){
+          var s=(i%2?1:-1), a=0.35+0.5*(i%4)/4;
+          d.style.opacity='.8';
+          d.style.transform='translate('+(s*(24+Math.random()*46)).toFixed(0)+'px,'+(-6-Math.random()*22).toFixed(0)+'px) scale('+(1.2+a)+')';
+        });
+        later(T(430),function(){ d.style.opacity='0'; });
+        later(T(800),function(){ if(d.parentNode) d.parentNode.removeChild(d); });
+      })(i);
+    }
+  }
+  function shockwave(x,y,color){
+    var v=$('#vfx'), s=document.createElement('div');
+    s.className='swave';
+    s.style.left=(x-16)+'px'; s.style.top=(y-6)+'px';
+    s.style.borderColor=color||'rgba(255,255,255,.9)';
+    v.appendChild(s);
+    later(T(16),function(){ s.style.opacity='.95'; s.style.transform='scale(4.5,2.2)'; });
+    later(T(300),function(){ s.style.opacity='0'; });
+    later(T(660),function(){ if(s.parentNode) s.parentNode.removeChild(s); });
+  }
+  function zoom(){
+    var a=$('#arena'); if(!a) return;
+    a.classList.remove('zoom'); void a.offsetWidth; a.classList.add('zoom');
+  }
+  /* ---- 近身格斗：五种编排 ---- */
   function meleeAttack(aside,dside,name,cfg,crit){
     var A=geo(aside), D=geo(dside), L=(aside==='me');
     var dir=L?1:-1, dist=Math.abs(D.x-A.x)-58;
     if(dist<26) dist=26;
     var mv=MOVES[name]||['jab','hook','up'];
     var uA=document.getElementById(aside==='me'?'uMe':'uFoe');
-    if(uA) uA.style.zIndex='6';               // 突进时压在对手上层
+    var cx=(A.x+D.x)/2+(L?-10:10);
+    if(uA) uA.style.zIndex='6';
+    emo(aside,'😤');
+
+    function home(delayBack){
+      later(delayBack||0,function(){
+        setFigT(aside,0,0,1,0,T(250),'cubic-bezier(.4,0,.3,1)');
+        later(T(270),function(){ manual(aside,false); if(uA) uA.style.zIndex=''; });
+      });
+    }
+    function strike(kind,y){ pose(aside,kind); swingWep(aside); impact(cx, (y||D.y-8), crit); contactFx(cfg,cx,(y||D.y-8)); }
+    function nudge(i){ setFigT(aside, dir*(dist-(i%2?18:2)), (i%2?(L?12:-12):(L?4:-4)), 1, T(90)); }
+
+    var r=rnd();
+    var style = crit ? (r<0.5?'launch':'kickaway')
+                     : (r<0.18?'clash':(r<0.44?'flurry':'combo'));
+
+    /* ① 对拳：双方同时冲上来硬碰硬，一起弹开 */
+    if(style==='clash'){
+      var uD=document.getElementById(dside==='me'?'uMe':'uFoe');
+      manual(aside,true); manual(dside,true);
+      setFigT(aside,0,0,1,10); setFigT(dside,0,0,1,10);
+      later(T(20),function(){
+        setFigT(aside, dir*dist*0.44, L?5:-5, 1, T(130),'ease-out');
+        setFigT(dside,-dir*dist*0.44, L?-5:5, 1, T(130),'ease-out');
+        ghost(aside, dir*dist*0.2);
+      });
+      later(T(155),function(){
+        pose(aside,'jab'); pose(dside,'jab');
+        impact(cx,D.y-10,true); flashx(.5); shake(); speedLines();
+        ringAt(cx,D.y-10,'#fff');
+      });
+      later(T(340),function(){
+        knock(dside, dir, 18);
+        setFigT(aside, -dir*22, L?-6:6, 1, T(170),'ease-out');
+      });
+      later(T(600),function(){ manual(aside,false); manual(dside,false); if(uD) uD.style.zIndex=''; });
+      return;
+    }
+
+    /* ②③④⑤ 都要先突进 */
     manual(aside,true);
     setFigT(aside,0,0,1,10);
-    emo(aside,'😤');
-    later(12,function(){
-      setFigT(aside, dir*dist, L?7:-7, 1.04, 155,'cubic-bezier(.25,1.15,.35,1)');
+    later(T(12),function(){
+      setFigT(aside, dir*dist, L?7:-7, 1.04, T(155),'cubic-bezier(.25,1.15,.35,1)');
       ghost(aside, dir*dist*0.5);
-      later(95,function(){ ghost(aside, dir*dist*0.85); });
+      later(T(95),function(){ ghost(aside, dir*dist*0.85); });
     });
-    later(170,function(){
-      var hits=crit?4:3, cx=(A.x+D.x)/2+(L?-10:10);
+
+    /* ② 乱拳连打：6 下急速交替 + 速度线 */
+    if(style==='flurry'){
+      later(T(165),function(){
+        speedLines();
+        for(var i=0;i<6;i++){
+          (function(i){
+            later(i*T(58),function(){
+              strike(i%2?'jab':'hook'); nudge(i);
+              if(i===2) shake();
+            });
+          })(i);
+        }
+        later(6*T(58),function(){ knock(dside,dir,crit?24:16); });
+        home(6*T(58)+T(140));
+      });
+      return;
+    }
+
+    /* ③ 上勾挑空：打上天再砸下来 + 扬尘 */
+    if(style==='launch'){
+      later(T(165),function(){
+        strike('up', D.y-24); zoom();
+        later(T(110),function(){
+          manual(dside,true);
+          setFigT(dside, 0, 0, 0, T(10));
+          later(T(20),function(){
+            setFigT(dside, dir*8, -dir*40, 1, 0, T(200),'cubic-bezier(.2,.85,.4,1)');
+            setFigT(dside, dir*8, -dir*40, 1, T(200),'cubic-bezier(.2,.85,.4,1)', -54);
+          });
+        });
+        later(T(360),function(){                       // 砸地
+          setFigT(dside, dir*16, -dir*86, 1, T(190),'cubic-bezier(.5,0,.9,.4)', 16);
+        });
+        later(T(560),function(){
+          dust(D.x, D.y+22, 10); shockwave(D.x, D.y+26, 'rgba(255,214,150,.95)');
+          impact(D.x, D.y+10, true); shake(); zoom(); cheer();
+        });
+        later(T(900),function(){ setFigT(dside,0,0,1,T(220),'cubic-bezier(.3,0,.4,1)',0);
+          later(T(240),function(){ manual(dside,false); }); });
+        home(T(700));
+      });
+      return;
+    }
+
+    /* ④ 一脚踢飞：横着飞出去撞地 */
+    if(style==='kickaway'){
+      later(T(165),function(){
+        pose(aside,'kick'); swingWep(aside); zoom();
+        later(T(70),function(){ impact(cx, D.y-14, true); });
+        later(T(150),function(){
+          manual(dside,true);
+          setFigT(dside, dir*70, dir*70, 1, T(260),'cubic-bezier(.3,.7,.6,1)', -14);
+        });
+        later(T(430),function(){
+          dust(D.x, D.y+22, 9); shockwave(D.x, D.y+26, 'rgba(255,150,170,.95)');
+          shake(); cheer();
+        });
+        later(T(760),function(){ setFigT(dside,0,0,1,T(240),'cubic-bezier(.3,0,.4,1)',0);
+          later(T(260),function(){ manual(dside,false); }); });
+        home(T(560));
+      });
+      return;
+    }
+
+    /* ⑤ 常规连招：按角色专属套路打 3~4 下 */
+    later(T(170),function(){
+      var hits=crit?4:3;
       for(var i=0;i<hits;i++){
         (function(i){
-          later(i*105,function(){
+          later(i*T(105),function(){
             var m=mv[i%mv.length]; if(m==='slash') m='chop';
-            pose(aside,m);                                    // 每一招动作都不一样
-            setFigT(aside, dir*(dist-(i%2?18:2)), (i%2?(L?12:-12):(L?4:-4)), 1, 90);
-            swingWep(aside);
-            impact(cx, D.y-8, crit);
-            contactFx(cfg, cx, D.y-8);
+            if(m==='kick'){ pose(aside,'kick'); swingWep(aside); impact(cx,D.y-4,crit); contactFx(cfg,cx,D.y-4); }
+            else { pose(aside,m); nudge(i); swingWep(aside); impact(cx,D.y-8,crit); contactFx(cfg,cx,D.y-8); }
           });
         })(i);
       }
-      later(hits*105,function(){ knock(dside, dir, crit?22:13); });
-      later(hits*105+210,function(){
-        setFigT(aside,0,0,1,255,'cubic-bezier(.4,0,.3,1)');
-        later(275,function(){ manual(aside,false); if(uA) uA.style.zIndex=''; });
-      });
+      later(hits*T(105),function(){ knock(dside, dir, crit?22:13); });
+      home(hits*T(105)+T(200));
     });
   }
   function arenaTheme(){ var a=$('#arena'); if(a) a.style.background=THEME[Math.min(round,3)]; }
@@ -1545,6 +1732,8 @@
   }
 
   $('#go').addEventListener('click',function(){ show('s-bracket'); startTournament(); });
+  $('#ff').addEventListener('click', toggleFF);
+  $('#sk').addEventListener('click', skipBattle);
   $('#fightbtn').addEventListener('click',function(){ playBattle(); });
 
   if(typeof window!=='undefined'){ window.__FFL={runBattle:runBattle,playerBattle:playerBattle,F:F,BOOST:BOOST}; }
